@@ -1,0 +1,58 @@
+= Where's my banana?
+
+:icons:
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+== Issue
+
+When using the *arrow-rs* and *parquet-rs* libraries to copy parquet files, data seems to get corrupted as soon as the origin file contains a `null` item in a map.
+
+== How to reproduce
+
+This project can build two binaries.
+
+It can be run with those commands:
+
+[source, shell]
+----
+cargo run --release --bin generate <1>
+cargo run --release --bin copy <2>
+----
+<1> cmd to generate the input parquet file
+<2> cmd to copy the input parquet file using arrow-rs and parquet-rs libs into an output parquet file 
+
+The first command generates a parquet file containing the following data:
+
+.Input parquet file
+[source, txt]
+----
+{maps: null}
+{maps: {"fruit" -> "Pineapple"}}
+{maps: {"fruit" -> "Mango"}}
+{maps: {"fruit" -> "Banana"}}
+----
+
+The second command parses the parquet file and copies its data into an other one, but the `banana` entry is missing (´;︵;`)
+
+.Output parquet file
+[source, txt]
+----
+{maps: null}
+{maps: {}}
+{maps: {"fruit" -> "Pineapple"}}
+{maps: {"fruit" -> "Mango"}}
+
+----
+
+NOTE: the same issue can be seen when using the `merge` command of the https://github.com/manojkarthick/pqrs[pqrs] tool which also depends on arrow-rs
+
+[source, shell]
+----
+pqrs merge --input parquet/input.parquet --output parquet/output_pqrs.parquet
+----
