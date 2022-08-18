@@ -9,3 +9,5 @@ edition = "2021"
 bytes = "1"
 parquet = { version = "20.0.0", default-features = false, features = [ "arrow", "snap" ] }
 arrow = { version = "20.0.0", default-features = false }
+# parquet = { git = "https://github.com/tustvold/arrow-rs", branch = "fix-map-array-reader", default-features = false, features = [ "arrow", "snap" ] }
+# arrow = { git = "https://github.com/tustvold/arrow-rs", branch = "fix-map-array-reader", default-features = false }
